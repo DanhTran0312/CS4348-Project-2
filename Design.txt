@@ -1,0 +1,70 @@
+semaphore info_line = 0
+semaphore number = 0
+semaphore announcer = 0
+semaphore call = 0
+semaphore agent_line = 4
+semaphore enter_line = 0
+semaphore agent_available = 2
+semaphore cust_ready = 0
+semaphore serve = 0
+semaphore exam = 0
+semaphore finish_exam = 0
+semaphore license = 0
+semaphore exit = 0
+
+
+void customer (){
+    enterDMV();
+    signal(info_line)
+    wait(number)
+    getNumber()
+    signal(announcer)
+    wait(call)
+    enterAgentLine()
+    signal(enter_line)
+    wait(agent_available)
+    signal(cust_ready)
+    wait(serve)
+    beingServed()
+    signal(agent_line)
+    wait(exam)
+    takeExam()
+    signal(finish_exam)
+    wait(license)
+    exit()
+    signal(exit)
+}
+
+void announcer(){
+    while(true) {
+        wait(announcer)
+        wait(agent_line)
+        callNumber()
+        signal(call)
+    }
+}
+
+void informationDesk(){
+    while(true) {
+        wait(info_line)
+        giveUniqueNumber()
+        signal(number)
+    }
+}
+
+void agent(){
+    while(true) {
+        wait(enter_line)
+        wait(cust_ready)
+        getCustomer()
+        serveCustomer()
+        signal(serve)
+        requestExam()
+        signal(exam)
+        wait(finish_exam)
+        giveLicense()
+        signal(license)
+        wait(exit)
+        signal(agent_available)
+    }
+}
